@@ -1,0 +1,24 @@
+These are not actually methods its just for triggers which will trigger continuous communication without any interption by other things.
+when any one these triggered others things will work but will have very low priority.
+I'm not sure on using these actually but maybe their will need for these in future.
+
+video
+voice
+chat
+
+
+Well, now real methods since, their will be different type of requests so, its better to let different functions handle it in different ways.
+
+Lets, categorise the requests.
+
+1. public-data
+    -> When client requests for any publicly available data, what server have.
+
+2. update
+    -> When client requests server for any updates on publicly-available data.
+
+3. connect
+    -> help users for creating a connection
+
+4. send
+    -> when someone wants to send some file to the server or directly to the client

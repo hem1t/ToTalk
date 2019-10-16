@@ -1,0 +1,41 @@
+Protocols for Server and client communication.
+Case 1: "When a client trying to connect to a server."
+    client:
+        {
+            alias:""
+            data:enc("user@pass")
+            data-type:"user-pass"
+            channel:
+        }
+    server: if user and pass are correct.
+        {
+            public-user-list: { user: (key, IP) }
+        }
+    server: (Optional(if we used user and pass for any reason)) if user and pass are not correct.
+        {
+            data: "Your given username and password doesn't matches the database."
+            data-type: message
+        }
+
+Case 2: "When client talking to client, via chat."
+    client1: (to server)
+        chat{
+            to: "alias" / world
+            data: "Hello"
+            message-id: (message id) alias1-alias2-serial_id
+        }
+    server: (to client2) "When forwarding the message."
+        chat{
+            from: "alias"
+            data: "Hello"
+            message-id: (message id)
+        }
+    server: (to client1) "Updating client1 on message"
+        chat-update{
+            message-id: (message id)
+            status: 0 | 1 | 2 (0: received by server, 1: received by the client, 2: maybe not received by the client.)
+        }
+    client2: (to server) "When received message."
+        chat-ack{
+            message-id: message-id
+        }
