@@ -28,23 +28,30 @@ def process_request_dict(data, method):
 
 def listener():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(("0.0.0.0", 5555))
+    while True:
+        try:
+            sock.bind(("0.0.0.0", 5555))
+            break
+        except Exception as e:
+            print(e)
+            quit()
     sock.listen(20)
     while True:
         data = " "
         try:
             time.sleep(1)
             sock_client, address = sock.accept()
+            print("Got connection from "+str(address))
             while data[-1] != ";":
                 data += sock_client.recv(1).decode()
             print(data)
             data_d, methods = packet_parser(data)
+            print("Adding to user_list. "+data_d['u'])
             add_user(data_d['u'], address[0])
+            c_app.add_user_in_list(data_d['u'])
             process_request_dict(data_d, methods)
         except (KeyboardInterrupt, SystemExit):
             break
-        except Exception as e:
-            print(e)
 
 
 def get_size(wroot):
@@ -126,32 +133,41 @@ class ClientApp:
         self.chat_label.config(state=DISABLED)
 
     def insert_chat(self, event):
-        global username
-        text = self.chat_text.get()
-        if text[0] == "@":
-            user = text[1:text.index(" ")]
-            global user_list
-            address = user_list[user]
-            self.send(text, address)
-        else:
-            self.sendall(text)
-            
-        self.chat_label.config(state=NORMAL)
-        self.chat_label.insert(END, "\n" + username + ": " + text)
-        self.chat_label.config(state=DISABLED)
-        self.chat_text.set("")
+        global username, user_list
+        try:
+            text = self.chat_text.get()
+            self.chat_label.config(state=NORMAL)
+            if text[0] == "@":
+                user = text[1:text.index(" ")]
+                text = text[text.index(" "):]
+                address = user_list[user]
+                threading.Thread(target=self.send_one, args=(text, address)).start()
+                self.chat_label.insert(END, "\n"+username+" -> "+user+":"+text)
+            else:
+                threading.Thread(target=self.sendall, args=(text,)).start() 
+                self.chat_label.insert(END, "\n" + username + ":" + text)
+        except ValueError:
+            pass
+        except Exception as e:
+            print(e)
+        finally:
+            self.chat_label.config(state=DISABLED)
+            self.chat_text.set("")
 
-    def send(self, text, address):
+    def send_one(self, text, address):
+        global username
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((address, 5555))
-        sock.send(bytes("chat{t:" + text + ",u:" + username + ",}", 'utf-8'))
-        sock.close()
+        message="chat{t:"+text.strip()+",u:"+username.strip()+",};"
+        sock.send(bytes(message, 'utf-8'))
+        print("Sended to: "+ address)
+        del sock
 
     def sendall(self, text):
         global user_list
         for user in user_list.keys():
             print("sending... "+user)
-            self.send(text, user_list[user])
+            self.send_one(text, user_list[user])
 
     def add_user_in_list(self, user_name):
         self.label_list.config(state=NORMAL)
