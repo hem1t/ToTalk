@@ -28,6 +28,7 @@ def process_request_dict(data, method):
 
 def listener():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     while True:
         try:
             sock.bind(("0.0.0.0", 5555))
@@ -181,5 +182,10 @@ if __name__ == "__main__":
     root.minsize(800, 405)
     root.maxsize(805, 437)
     c_app = ClientApp(root)
-    threading.Thread(target=listener).start()
+    thread = threading.Thread(target=listener)
+    thread.start()
     root.mainloop()
+    try:
+        thread.exit()
+    except:
+        pass
