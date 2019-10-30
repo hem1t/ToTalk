@@ -8,6 +8,7 @@ import time
 
 username = "hem1t"
 user_list = {}
+address_list = []
 
 
 def remove_user(user):
@@ -16,6 +17,7 @@ def remove_user(user):
 
 def add_user(user, address):
     user_list[user] = address
+    address_list.append(address)
 
 
 def process_request_dict(data, method):
@@ -47,9 +49,12 @@ def listener():
                 data += sock_client.recv(1).decode()
             print(data)
             data_d, methods = packet_parser(data)
-            print("Adding to user_list. "+data_d['u'])
-            add_user(data_d['u'], address[0])
-            c_app.add_user_in_list(data_d['u'])
+            if address[0] in address_list:
+                pass
+            else:
+                print("Adding to user_list. "+data_d['u'])
+                add_user(data_d['u'], address[0])
+                c_app.add_user_in_list(data_d['u'])
             process_request_dict(data_d, methods)
         except (KeyboardInterrupt, SystemExit):
             break
@@ -160,6 +165,7 @@ class ClientApp:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((address, 5555))
         message="chat{t:"+text.strip()+",u:"+username.strip()+",};"
+        print("msg: "+message)
         sock.send(bytes(message, 'utf-8'))
         print("Sended to: "+ address)
         del sock
