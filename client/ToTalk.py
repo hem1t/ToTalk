@@ -1,93 +1,15 @@
 #! /usr/bin/env python3
-import socket
-from tkinter import *
 import threading
-from Parser import packet_parser
-import time
-# import sys
-
-username = "hem1t"
-user_list = {}
-address_list = []
-
-
-def remove_user(user):
-    user_list.pop(user)
-
-
-def add_user(user, address):
-    user_list[user] = address
-    address_list.append(address)
-
-
-def process_request_dict(data, method):
-    global c_app
-    if method == "chat":
-        c_app.input_chat(data['u'], data['t'])
-    elif method == "remove":
-        remove_user(data['u'])
-
-
-def listener():
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    while True:
-        try:
-            sock.bind(("0.0.0.0", 5555))
-            break
-        except Exception as e:
-            print(e)
-            quit()
-    sock.listen(20)
-    while True:
-        data = " "
-        try:
-            time.sleep(1)
-            sock_client, address = sock.accept()
-            print("Got connection from "+str(address))
-            while data[-1] != ";":
-                data += sock_client.recv(1).decode()
-            print(data)
-            data_d, methods = packet_parser(data)
-            if address[0] in address_list:
-                pass
-            else:
-                print("Adding to user_list. "+data_d['u'])
-                add_user(data_d['u'], address[0])
-                c_app.add_user_in_list(data_d['u'])
-            process_request_dict(data_d, methods)
-        except (KeyboardInterrupt, SystemExit):
-            break
+try:
+    from App import *
+except ImportError:
+    from .App import *
+import os
 
 
 def get_size(wroot):
     print(wroot.winfo_width())
     print(wroot.winfo_height())
-
-
-class ConnectApp:
-    def __init__(self, master, other_self):
-        self.other_self = other_self
-        self.master = master
-        self.user_value = StringVar()
-        self.user_label = Label(master, text="username :")
-        self.user_entry = Entry(master, textvariable=self.user_value)
-        self.user_label.grid(row=0, pady=1, sticky=E)
-        self.user_entry.grid(row=0, column=1, pady=1)
-        self.ip_value = StringVar()
-        self.ip_label = Label(master, text="IP Address :")
-        self.ip_entry = Entry(master, textvariable=self.ip_value)
-        self.connect_button = Button(master, text="Add user", command=lambda: self.connect_user(self.user_entry.get(), self.ip_entry.get()))
-        self.ip_label.grid(row=1, pady=1)
-        self.ip_entry.grid(row=1, column=1, pady=1)
-        self.connect_button.grid(row=3, columnspan=2, pady=4)
-
-    def connect_user(self, username, address):
-        self.other_self.add_user_in_list(username)
-        print(username+address)
-        print("lsjdf")
-        add_user(username, address)
-        self.master.destroy()
 
 
 class ClientApp:
@@ -135,7 +57,7 @@ class ClientApp:
 
     def input_chat(self, other_username, text):
         self.chat_label.config(state=NORMAL)
-        self.chat_label.insert(END, "\n" + other_username + " o: " + text)
+        self.chat_label.insert(END, "\n" + other_username + text)
         self.chat_label.config(state=DISABLED)
 
     def insert_chat(self, event):
@@ -150,7 +72,7 @@ class ClientApp:
                 threading.Thread(target=self.send_one, args=(text, address)).start()
                 self.chat_label.insert(END, "\n"+username+" -> "+user+":"+text)
             else:
-                threading.Thread(target=self.sendall, args=(text,)).start() 
+                threading.Thread(target=self.sendall, args=(text,)).start()
                 self.chat_label.insert(END, "\n" + username + ":" + text)
         except ValueError:
             pass
@@ -191,7 +113,5 @@ if __name__ == "__main__":
     thread = threading.Thread(target=listener)
     thread.start()
     root.mainloop()
-    try:
-        thread.exit()
-    except:
-        pass
+    # Thread doesn't closes by itself, so program needs this line, to kill itself.
+    os.kill(os.getpid(), 1)
