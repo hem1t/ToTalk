@@ -1,4 +1,3 @@
-username = ""
 user_list = {}
 address_list = []
 

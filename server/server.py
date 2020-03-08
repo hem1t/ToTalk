@@ -6,7 +6,37 @@
 # imports
 from socket import socket, AF_INET, SOCK_STREAM
 from multiprocessing import Process
-from .request import Request
+try:
+    from .request import Request
+except:
+    from request import Request
+
+user_list = {}
+def add_user(user, address):
+    user_list[user] = address
+def get_users():
+    try:
+        with open("users", "r") as data:
+            file_data = data.read().split("\n")
+        
+        for line in file_data:
+            lst = line.split(":")
+            user_list[lst[0].strip()] = lst[1].strip()
+    except FileNotFoundError:
+        with open("users", "w") as data:
+            data.write("")
+        with open("users", "r") as data:
+            file_data = data.read().split("\n")
+        
+        for line in file_data:
+            lst = line.split(":")
+            user_list[lst[0].trim()] = lst[1].trim()
+    except Exception as e:
+        print(e)
+        exit()
+
+    print(user_list)
+get_users()
 
 IP = "0.0.0.0"
 PORT = 1234
@@ -19,4 +49,6 @@ if __name__ == "__main__":
 
     while True:
         client_socket, address = sock.accept()
-        Process(target=Request, args=(client_socket, address)).start()
+        print(address)
+        Request(client_socket, address, user_list, add_user)
+        get_users()

@@ -38,11 +38,14 @@ def packet_parser(data):
             escape = False
             escape_toggle = False
             string += char
+        elif char == " ":
+            continue
         else:
             if not escape:
                 string += char
             else:
                 escape_toggle = True
+
 
         if complete == 2:
             print("complete") if run else ""
@@ -52,7 +55,7 @@ def packet_parser(data):
     if run:
         return new_data
     else:
-        return new_data, methods.strip()
+        return new_data, [method for method in methods.split("\n")]
 
 
 if run:
@@ -62,4 +65,23 @@ if run:
     print(packet_parser("{key:value, key1:value1,}"))
     print(packet_parser("lksdf: ks, {key:value,"
                         "key1:value1,}"))
-    print(packet_parser("lksd f: k s, {  k e y:v a/,lue, key 1:v/:alu}e 1,}"))
+    print(packet_parser("lksd f: k s, {k e y:v a/,lue, key 1#:v/:alu}e 1,}"))
+
+
+def is_valid_ip(IP):
+    try:
+        ip = IP.split(".")
+        if len(ip) != 4:
+            return False
+        print("First IP test passed.")
+        for each in ip:
+            i = int(each)
+            if i < 0 or i > 255:
+                return False
+        print("second IP test passed.")
+    except ValueError:
+        return False
+    return True
+
+if __name__ == "__main__":
+    print(packet_parser("user-list{'user1': '127.0.0.1', 'user2': '192.129.129.1', 'user3': '212.12.23.1', 'djf': '127.0.0.1', 'lkdjf': '127.0.0.1', 'hjkh': '127.0.0.1', 'hem1t': '127.0.0.1',}"))
