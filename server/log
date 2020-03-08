@@ -1,0 +1,83 @@
+Sun Mar  8 03:07:08 2020	Request: 127.0.0.1
+Sun Mar  8 03:07:08 2020		join{u:hem1t,}
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:07:08 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Request: 127.0.0.1
+Sun Mar  8 03:09:25 2020		join{u:hem1t,}
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:09:25 2020	Error:name 'user_list' is not defined
+Sun Mar  8 03:10:45 2020	Request: 127.0.0.1
+Sun Mar  8 03:10:45 2020		join{u:hem1t,}
+Sun Mar  8 03:12:39 2020	Request: 127.0.0.1
+Sun Mar  8 03:12:39 2020		join{u:hem1t,}
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to user1
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to user2
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to user3
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to djf
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to lkdjf
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to hjkh
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to hem
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to username
+Sun Mar  8 03:12:39 2020	Sended to new_user detail to user
+Sun Mar  8 03:14:40 2020	Request: 127.0.0.1
+Sun Mar  8 03:14:40 2020		join{u:hem1t,}
+Sun Mar  8 03:14:40 2020	Error: [Errno 111] Connection refused
+Sun Mar  8 03:14:40 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:14:40 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:14:40 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:14:40 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:14:40 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:14:40 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:14:40 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:14:40 2020	Error: [Errno 111] Connection refused
+Sun Mar  8 03:16:00 2020	Request: 127.0.0.1
+Sun Mar  8 03:16:00 2020		join{u:hem1t,}
+Sun Mar  8 03:16:00 2020	Error: [Errno 111] Connection refused
+Sun Mar  8 03:16:00 2020	Error: [Errno 111] Connection refused
+Sun Mar  8 03:16:00 2020	Error: [Errno 111] Connection refused
+Sun Mar  8 03:16:00 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:16:00 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:16:00 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:16:00 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:16:00 2020	Sended to new_user detail to hem1t
+Sun Mar  8 03:16:00 2020	Error: [Errno 111] Connection refused
+Sun Mar  8 03:16:22 2020	Request: 127.0.0.1
+Sun Mar  8 03:16:22 2020		join{u:username,}
+Sun Mar  8 03:16:22 2020	Error: [Errno 111] Connection refused
+Sun Mar  8 03:16:22 2020	Sended to new_user detail to username
+Sun Mar  8 03:16:22 2020	Sended to new_user detail to username
+Sun Mar  8 03:16:22 2020	Sended to new_user detail to username
+Sun Mar  8 03:16:22 2020	Sended to new_user detail to username
+Sun Mar  8 03:16:22 2020	Sended to new_user detail to username
+Sun Mar  8 03:16:22 2020	Sended to new_user detail to username
+Sun Mar  8 03:16:22 2020	Sended to new_user detail to username
+Sun Mar  8 03:16:22 2020	Error: [Errno 111] Connection refused
+Sun Mar  8 03:16:50 2020	Error: [Errno 110] Connection timed out
+Sun Mar  8 03:18:19 2020	Request: 127.0.0.1
+Sun Mar  8 03:18:19 2020		join{u:username,}
+Sun Mar  8 03:18:19 2020	Error: [Errno 111] Connection refused
+Sun Mar  8 03:18:19 2020	Sended to new_user detail to username
+Sun Mar  8 03:18:19 2020	Sended to new_user detail to username
+Sun Mar  8 03:18:19 2020	Sended to new_user detail to username
+Sun Mar  8 03:18:19 2020	Sended to new_user detail to username
+Sun Mar  8 03:18:19 2020	Sended to new_user detail to username
+Sun Mar  8 03:18:19 2020	Sended to new_user detail to username
+Sun Mar  8 03:18:19 2020	Sended to new_user detail to username
+Sun Mar  8 03:18:19 2020	Error: [Errno 111] Connection refused

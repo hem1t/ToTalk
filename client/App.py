@@ -42,10 +42,10 @@ class ConnectApp:
                 self.master.destroy()
 
 class VoiceApp:
-    def __init__(self, master, other_self):
+    def __init__(self, master, other_self, user_list):
         self.other_self = other_self
         self.master = master
-
+        self.user_list = user_list
 
 class ServerApp:
     def __init__(self, master, other_self, username):

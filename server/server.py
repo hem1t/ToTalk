@@ -5,12 +5,11 @@
 
 # imports
 from socket import socket, AF_INET, SOCK_STREAM
-from multiprocessing import Process
+import os
 try:
     from .request import Request
 except:
     from request import Request
-
 user_list = {}
 def add_user(user, address):
     user_list[user] = address
@@ -49,4 +48,3 @@ if __name__ == "__main__":
         client_socket, address = sock.accept()
         print(address)
         Request(client_socket, address, user_list, add_user)
-        get_users()

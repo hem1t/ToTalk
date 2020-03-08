@@ -82,6 +82,3 @@ def is_valid_ip(IP):
     except ValueError:
         return False
     return True
-
-if __name__ == "__main__":
-    print(packet_parser("user-list{'user1': '127.0.0.1', 'user2': '192.129.129.1', 'user3': '212.12.23.1', 'djf': '127.0.0.1', 'lkdjf': '127.0.0.1', 'hjkh': '127.0.0.1', 'hem1t': '127.0.0.1',}"))

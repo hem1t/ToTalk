@@ -1,4 +1,13 @@
 from Parser import packet_parser
+import threading
+from socket import socket, AF_INET, SOCK_STREAM
+import time
+
+
+def log(message):
+    localtime = time.asctime( time.localtime(time.time()))
+    with open("log", 'a') as data:
+        data.write(localtime +"\t"+ message + "\n")
 
 class Channel:
     def __init__(self):
@@ -13,19 +22,25 @@ class Request:
         self.sock = sock
         self.address = address[0]
         self.user_list = user_list
+        log("Request: "+self.address)
         try:
             print("recieving")
-            self.data, self.headers = packet_parser(sock.recv(1024).decode('utf-8'))
+            data = sock.recv(1024).decode('utf-8')
+            log("\t"+data)
+            self.data, self.headers = packet_parser(data)
             print("recieved")
         except UnicodeDecodeError:
             sock.send(bytes("error{message:Packets were broken.,};", 'utf-8'))
+            log("\tUnicodeDecodeError")
+        except ValueError:
+            sock.send(bytes("error{message:Broken packet was sent to server.,}", 'utf-8'))
+            log("\tValueError")
         # call request_handler in last.
         try:
             self.request_handler(adduser)
         except Exception as e:
-            print(e)
-        finally:
-            sock.send(bytes("error{message:Something unknown happened.,}", 'utf-8'))
+            sock.send(bytes("error{message:server-side-error}", 'utf-8'))
+            log("\t error at request_handler: "+str(e))
 
     def request_handler(self, adduser):
         # if self.address is in database for being this address alive then proceed
@@ -43,6 +58,7 @@ class Request:
             print("command join")
             self.send_user_list()
             self.add_user(adduser)
+            self.new_user()
         else:
             sock.send(bytes("error{message:command not available.,}", 'utf-8'))
             print("command not available.")
@@ -64,13 +80,7 @@ class Request:
     def chat_update(self):
         pass
 
-    def add_user(self):
-        pass
-
     def file_transfer(self):
-        pass
-
-    def create_udp(self):
         pass
 
     def channel_creator(self):
@@ -80,11 +90,11 @@ class Request:
         pass
 
     def send_details():
-        pass
+        sock.send(bytes("server{userlen:"+str(len(self.user_list.keys()))+",}"))
 
     def send_user_list(self):
         # sample packet from sender
-        # join{'u':hem1t,s}
+        # join{'u':hem1t,}
         print("sending user list")
         data = "user-list{"
         for key in self.user_list.keys():
@@ -99,3 +109,19 @@ class Request:
             adduser(self.data['u'], self.address)
             with open('users', 'a') as data:
                 data.write(f"\n{self.data['u']}:{self.address}")
+
+    def new_user(self):
+        def send(address, user, user_address):
+            try:
+                sock = socket(AF_INET, SOCK_STREAM)
+                sock.connect((address, 5555))
+                sock.send(bytes("new-user{u:"+user+",add:"+user_address+",}", 'utf-8'))
+                sock.close()
+                log("Sended to new_user detail to "+user)
+            except Exception as e:
+                log("Error: " + str(e))
+        for user in self.user_list.keys():
+            try:
+                threading.Thread(target=send, args=(self.user_list[user], self.data['u'], self.address)).start()
+            except Exception as e:
+                log("Error: " + str(e))

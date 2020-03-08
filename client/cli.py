@@ -73,6 +73,7 @@ def setting(params):
         server_PORT = params[1]
     else:
         return f"{params[0]}: unknown settings."
+    
     settings_text = f"username       :   {username}\nserver_IP      :   {server_IP}\nserver_PORT    :   {server_PORT}"
     print(settings_text)
     change_default_settings(settings_text)

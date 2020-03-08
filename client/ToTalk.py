@@ -6,11 +6,9 @@ import socket
 
 try:
     from cli import *
-    from Parser import packet_parser
     from App import *
 except ImportError:
     from .cli import *
-    from .App import *
     from .Parser import packet_parser
 
 ### User.py ###
@@ -23,6 +21,21 @@ def add_user(user, address):
     address_list.append(address)
 ### User.py ###
 
+### server.py ###
+def joinserver(app, server_IP, server_PORT, username):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((server_IP, server_PORT))
+    sock.send(bytes("join{u:"+username+",}", "utf-8"))
+    data = sock.recv(1024).decode('utf-8')
+    data, headers = packet_parser(data)
+    print(data)
+    print(headers)
+    if "error" in headers:
+        messagebox.showerror("wasn't able to connect default server.", data['message'])
+    else:
+        app.reset_for_server(data, headers)
+### server.py ###
+
 def process_request_dict(data, method, app, sock_client, address):
     if method == "chat":
         app.input_chat(data['u'], data['t'])
@@ -30,6 +43,9 @@ def process_request_dict(data, method, app, sock_client, address):
         remove_user(data['u'])
     elif method == "file":
         app.recieveFilePermission(data['u'], data['f'], address, sock_client)
+    elif method == "new-user":
+        app.add_user_in_list(data['u'], data['add'])
+        print("new-user")
 
 def listener():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -194,8 +210,11 @@ class ClientApp:
             self.send_one(text, user_list[user])
 
     def add_user_in_list(self, user_name, address):
+        global username
         if user_name in user_list.keys():
             messagebox.showinfo("", f"{user_name} is already in list.")
+        elif user_name == username:
+            pass
         else:
             add_user(user_name, address)
             print(user_list)
@@ -217,25 +236,28 @@ class ClientApp:
         print(data)
         global user_list
         user_list = {}
-        self.label_list.delete('1', END)
+        self.delete_label_list()
         for user in data.keys():
-            if user == username:
-                continue
             self.add_user_in_list(user, data[user])
     
-    def delete(self):
+    def delete_label_list(self):
         self.label_list.config(state=NORMAL)
         self.label_list.delete('1.0', END)
         self.label_list.config(state=DISABLED)
 
-
-
 if __name__ == "__main__":
     root = Tk()
     root.title("ToTalk")
-    root.minsize(800, 405)
+    root.minsize(804, 436)
     root.maxsize(805, 437)
     c_app = ClientApp(root)
+    # Settings up default server.
+    if is_valid_ip(server_IP) and server_PORT > 0:
+        try:
+            joinserver(c_app, server_IP, server_PORT, username)
+        except Exception as e:
+            messagebox.showerror("Error while connecting to default server", e)
+    # thread for listener.
     thread = threading.Thread(target=listener)
     thread.start()
     root.mainloop()
