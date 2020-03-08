@@ -4,12 +4,14 @@
 # Server will only have tcp communication.
 
 # imports
+from sys import argv
 from socket import socket, AF_INET, SOCK_STREAM
 import os
 try:
-    from .request import Request
+    from request import *
 except:
-    from request import Request
+    from .request import *
+    
 user_list = {}
 def add_user(user, address):
     user_list[user] = address
@@ -22,12 +24,12 @@ def get_users():
             try:
                 lst = line.split(":")
                 user_list[lst[0].strip()] = lst[1].strip()
-            except ValueError:
+            except:
                 pass
 
     except FileNotFoundError:
         with open("users", "w") as data:
-            data.write("")
+            data.write("\n")
     except Exception as e:
         print(e)
         exit()
@@ -35,8 +37,13 @@ def get_users():
     print(user_list)
 get_users()
 
-IP = "0.0.0.0"
-PORT = 1234
+try:
+    IP = argv[1]
+    PORT = int(argv[2])
+except:
+    print("please specify, IP and PORT for server to use.")
+    quit()
+
 port = (IP, PORT)
 
 if __name__ == "__main__":

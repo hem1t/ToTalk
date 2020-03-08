@@ -55,8 +55,7 @@ def packet_parser(data):
     if run:
         return new_data
     else:
-        return new_data, [method for method in methods.split("\n")]
-
+        return new_data, methods.strip()
 
 if run:
     a = packet_parser("{name: m/'s jd/'s,}")
@@ -66,7 +65,6 @@ if run:
     print(packet_parser("lksdf: ks, {key:value,"
                         "key1:value1,}"))
     print(packet_parser("lksd f: k s, {k e y:v a/,lue, key 1#:v/:alu}e 1,}"))
-
 
 def is_valid_ip(IP):
     try:

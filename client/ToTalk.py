@@ -24,9 +24,11 @@ def add_user(user, address):
 ### server.py ###
 def joinserver(app, server_IP, server_PORT, username):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(5)
     sock.connect((server_IP, server_PORT))
     sock.send(bytes("join{u:"+username+",}", "utf-8"))
-    data = sock.recv(1024).decode('utf-8')
+    length = int(sock.recv(1024).decode('utf-8'))
+    data = sock.recv(length).decode('utf-8')
     data, headers = packet_parser(data)
     print(data)
     print(headers)
@@ -46,6 +48,8 @@ def process_request_dict(data, method, app, sock_client, address):
     elif method == "new-user":
         app.add_user_in_list(data['u'], data['add'])
         print("new-user")
+    elif method == "voice":
+        pass
 
 def listener():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -59,21 +63,15 @@ def listener():
             quit()
     sock.listen(20)
     while True:
-        data = " "
+        data = ""
         try:
             sleep(1)
             sock_client, address = sock.accept()
             print("Got connection from "+str(address))
-            data += sock_client.recv(1024).decode()
+            data = sock_client.recv(1024).decode()
             print(data)
-            data_d, methods = packet_parser(data)
-            if address[0] in address_list:
-                pass
-            else:
-                print("Adding to user_list. "+data_d['u'])
-                add_user(data_d['u'], address[0])
-                c_app.add_user_in_list(data_d['u'])
-            process_request_dict(data_d, methods, c_app, sock_client, address)
+            data_d, method = packet_parser(data)
+            process_request_dict(data_d, method, c_app, sock_client, address)
         except (KeyboardInterrupt, SystemExit):
             break
 
@@ -158,10 +156,7 @@ class ClientApp:
             if text[0] == "/":
                 result_value = self.command(text)
                 self.chat_label.insert(END, "\n" + result_value)
-            if text[0] == "\\":
-                if len(text) > 1 and text[1] == "/":
-                    text = text[1:]
-            if text[0] == "@":
+            elif text[0] == "@":
                 temp_text = text[1:].split(" ")
                 user = temp_text[0]
                 if user == "":
@@ -211,6 +206,7 @@ class ClientApp:
 
     def add_user_in_list(self, user_name, address):
         global username
+        print('adding user')
         if user_name in user_list.keys():
             messagebox.showinfo("", f"{user_name} is already in list.")
         elif user_name == username:
@@ -233,7 +229,7 @@ class ClientApp:
     
     def reset_for_server(self, data, headers):
         # After joining any other server App would need to reset whole user list according to server.
-        print(data)
+        print(str(data) + "reset_for_server")
         global user_list
         user_list = {}
         self.delete_label_list()

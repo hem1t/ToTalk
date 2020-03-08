@@ -98,7 +98,10 @@ class Request:
         print("sending user list")
         data = "user-list{"
         for key in self.user_list.keys():
-            data += key + ":" + self.user_list[key] + "," 
+            data += key + ":" + self.user_list[key] + ","
+        data += "}"
+        self.sock.send(bytes(str(len(data)), "utf-8"))
+        time.sleep(2)
         self.sock.send(bytes("user-list"+data, 'utf-8'))
     
     def add_user(self, adduser):
@@ -117,9 +120,13 @@ class Request:
                 sock.connect((address, 5555))
                 sock.send(bytes("new-user{u:"+user+",add:"+user_address+",}", 'utf-8'))
                 sock.close()
-                log("Sended to new_user detail to "+user)
+                print("Sended to new_user detail to "+address)
+                log("Sended to new_user detail to "+address)
             except Exception as e:
                 log("Error: " + str(e))
+        print(self.user_list.keys())
+        print(self.user_list)
+        print(self.user_list['username'])
         for user in self.user_list.keys():
             try:
                 threading.Thread(target=send, args=(self.user_list[user], self.data['u'], self.address)).start()

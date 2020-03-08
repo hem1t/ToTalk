@@ -1,7 +1,9 @@
 try:
+    from Parser import *
     from settings import *
 except ImportError:
     from .settings import *
+import socket
 
 username = username
 settings_text = settings_text
@@ -45,20 +47,35 @@ def cli_run(stream, app, user_list):
     elif "/help" in command:
         return help_text
     elif "/sendfile" in command:
-        return sendfile(user_list[options[0]], options[1], app)        
+        return sendfile(user_list[options[0]], options[1], app)
+    elif "/joinserver" in command:
+        if is_valid_ip(options[0]) and int(options[1]) > 0:
+            return joinserver(app, options[0], int(options[1]), username)
+        else:
+            return "wrong info given."
     else:
-        return '"/" is for commands, try "\/"'
+        return f"{command} not found."
 
 def sendfile(address, path, app):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        sock.connect(address)
-    except:
-        pass
     return "Feature Not available, right now, wait for the update."
 
-def joinserver(address):
-    pass
+def joinserver(app, server_IP, server_PORT, username):
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(5)
+        sock.connect((server_IP, server_PORT))
+        sock.send(bytes("join{u:"+username+",}", "utf-8"))
+        length = int(sock.recv(1024).decode('utf-8'))
+        data = sock.recv(length).decode('utf-8')
+        data, headers = packet_parser(data)
+        print(data)
+        print(headers)
+        if "error" in headers:
+            return "wasn't able to connect server." +"\n\t"+data['message']
+        else:
+            app.reset_for_server(data, headers)
+    except Exception as e:
+        return str(e)
 
 def setting(params):
     global username, server_PORT, server_IP, settings_text

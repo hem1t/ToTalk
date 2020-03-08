@@ -68,9 +68,11 @@ class ServerApp:
     
     def join_server(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(5)
         sock.connect((self.IP_value.get(), int(self.PORT_value.get())))
         sock.send(bytes("join{u:"+self.username+",}", "utf-8"))
-        data = sock.recv(1024).decode('utf-8')
+        length = int(sock.recv(1024).decode('utf-8'))
+        data = sock.recv(length).decode('utf-8')
         print(data)
         data, headers = packet_parser(data)
         print(data)
