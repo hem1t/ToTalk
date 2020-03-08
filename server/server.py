@@ -18,19 +18,17 @@ def get_users():
     try:
         with open("users", "r") as data:
             file_data = data.read().split("\n")
-        
+
         for line in file_data:
-            lst = line.split(":")
-            user_list[lst[0].strip()] = lst[1].strip()
+            try:
+                lst = line.split(":")
+                user_list[lst[0].strip()] = lst[1].strip()
+            except ValueError:
+                pass
+
     except FileNotFoundError:
         with open("users", "w") as data:
             data.write("")
-        with open("users", "r") as data:
-            file_data = data.read().split("\n")
-        
-        for line in file_data:
-            lst = line.split(":")
-            user_list[lst[0].trim()] = lst[1].trim()
     except Exception as e:
         print(e)
         exit()
